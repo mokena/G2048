@@ -1,7 +1,5 @@
 #include "HelloWorldScene.h"
 
-
-
 Scene* HelloWorld::createScene()
 {
     // 'scene' is an autorelease object
@@ -26,6 +24,9 @@ bool HelloWorld::init()
     {
         return false;
     }
+
+	auto number = Number::create(2, Size(100, 100), Point(Vec2(50, 50)), Color3B::MAGENTA);
+	addChild(number);
 
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->onTouchBegan = CC_CALLBACK_2(HelloWorld::onTouchBegan, this);
