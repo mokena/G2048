@@ -20,13 +20,13 @@ bool HelloWorld::init()
 {
     //////////////////////////////
     // 1. super init first
-    if ( !Layer::init() )
+    if ( !LayerColor::initWithColor(Color4B(180, 170, 160, 255)))
     {
         return false;
     }
 
-	auto number = Number::create(2, Size(100, 100), Point(Vec2(50, 50)), Color3B::MAGENTA);
-	addChild(number);
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	createNumbers(visibleSize);
 
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->onTouchBegan = CC_CALLBACK_2(HelloWorld::onTouchBegan, this);
@@ -34,6 +34,20 @@ bool HelloWorld::init()
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 
     return true;
+}
+
+void HelloWorld::createNumbers(Size screenSize) {
+	int len = (screenSize.width - 20) / 4 - 10;
+	int startY = ((screenSize.height - len * 4) - 10) / 2;
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			auto number = Number::create(2, Size(len, len), Point(Vec2(20 + i*(len + 10), startY + j*(len + 10))), Color3B::MAGENTA);
+			number->setPosition(Vec2(10 + i*(len + 10), startY + j*(len + 10)));
+
+			addChild(number);
+		}
+	}
 }
 
 bool HelloWorld::onTouchBegan(Touch* t, Event* e) {

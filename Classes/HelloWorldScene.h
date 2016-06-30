@@ -5,7 +5,7 @@
 #include "Number.h"
 USING_NS_CC;
 
-class HelloWorld : public cocos2d::Layer
+class HelloWorld : public cocos2d::LayerColor
 {
 private:
 	static const int DIRECT_UP = 1;
@@ -23,6 +23,8 @@ public:
 	void onTouchEnded(Touch* t, Event* e);
 
 	void doMove(int direction);
+
+	void createNumbers(Size screenSize);
     
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
