@@ -12,9 +12,11 @@ private:
 	static const int DIRECT_DOWN = 2;
 	static const int DIRECT_LEFT = 3;
 	static const int DIRECT_RIGHT = 4;
+	static const int LINE_NUMBER_COUNT = 4;
 
 	Vec2 touchStart;
 	Vec2 touchEnd;
+	Number* numbers[LINE_NUMBER_COUNT][LINE_NUMBER_COUNT];
 public:
     static cocos2d::Scene* createScene();
 
@@ -23,6 +25,10 @@ public:
 	void onTouchEnded(Touch* t, Event* e);
 
 	void doMove(int direction);
+	void moveLeft();
+	void moveRight();
+	void moveUp();
+	void moveDown();
 
 	void createNumbers(Size screenSize);
     

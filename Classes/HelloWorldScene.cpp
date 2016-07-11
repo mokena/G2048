@@ -37,14 +37,15 @@ bool HelloWorld::init()
 }
 
 void HelloWorld::createNumbers(Size screenSize) {
-	int len = (screenSize.width - 20) / 4 - 10;
-	int startY = ((screenSize.height - len * 4) - 10) / 2;
+	int len = (screenSize.width - 20) / LINE_NUMBER_COUNT - 10;
+	int startY = ((screenSize.height - len * LINE_NUMBER_COUNT) - 10) / 2;
 
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
+	for (int i = 0; i < LINE_NUMBER_COUNT; i++) {
+		for (int j = 0; j < LINE_NUMBER_COUNT; j++) {
 			auto number = Number::create(2, Size(len, len), Point(Vec2(20 + i*(len + 10), startY + j*(len + 10))), Color3B::MAGENTA);
 			number->setPosition(Vec2(10 + i*(len + 10), startY + j*(len + 10)));
 
+			numbers[i][j] = number;
 			addChild(number);
 		}
 	}
@@ -66,9 +67,104 @@ void HelloWorld::onTouchEnded(Touch* t, Event* e) {
 	else {
 		this->doMove(disY > 0 ? DIRECT_UP : DIRECT_DOWN);
 	}
-
 }
 
 void HelloWorld::doMove(int direction) {
-	log("direction %d", direction);
+	switch (direction) {
+	case DIRECT_RIGHT:
+		moveRight();
+		break;
+	case DIRECT_LEFT:
+		moveLeft();
+		break;
+	case DIRECT_UP:
+		moveUp();
+		break;
+	case DIRECT_DOWN:
+		moveDown();
+		break;
+	default:
+		break;
+	}
+}
+
+void HelloWorld::moveLeft() {
+	//move every number to the most left, until get combined or the end
+	for (int j = 0; j < LINE_NUMBER_COUNT; j++) {
+		int end = 0;
+		for (int i = 0; i < LINE_NUMBER_COUNT; i++) {
+			for (int n = i; n > end; n--) {
+				if (numbers[n - 1][j]->getNumber() == 0) {
+					numbers[n - 1][j]->setNumber(numbers[n][j]->getNumber());
+					numbers[n][j]->setNumber(0);
+				}
+				else if (numbers[n - 1][j]->getNumber() == numbers[n][j]->getNumber()) {
+					numbers[n - 1][j]->setNumber(numbers[n - 1][j]->getNumber() + numbers[n][j]->getNumber());
+					numbers[n][j]->setNumber(0);
+					end = i;
+					break;
+				}
+			}
+		}
+	}
+}
+void HelloWorld::moveRight() {
+	//move every number to the most right, until get combined or the end
+	for (int j = 0; j < LINE_NUMBER_COUNT; j++) {
+		int end = LINE_NUMBER_COUNT - 1;
+		for (int i = LINE_NUMBER_COUNT - 1; i >= 0; i--) {
+			for (int n = i; n < end; n++) {
+				if (numbers[n + 1][j]->getNumber() == 0) {
+					numbers[n + 1][j]->setNumber(numbers[n][j]->getNumber());
+					numbers[n][j]->setNumber(0);
+				}
+				else if (numbers[n + 1][j]->getNumber() == numbers[n][j]->getNumber()) {
+					numbers[n + 1][j]->setNumber(numbers[n + 1][j]->getNumber() + numbers[n][j]->getNumber());
+					numbers[n][j]->setNumber(0);
+					end = i;
+					break;
+				}
+			}
+		}
+	}
+}
+void HelloWorld::moveUp() {
+	//move every number to the most up, until get combined or the end
+	for (int i = 0; i < LINE_NUMBER_COUNT; i++) {
+		int end = LINE_NUMBER_COUNT - 1;
+		for (int j = LINE_NUMBER_COUNT - 1; j >= 0; j--) {
+			for (int n = j; n < end; n++) {
+				if (numbers[i][n + 1]->getNumber() == 0) {
+					numbers[i][n + 1]->setNumber(numbers[i][n]->getNumber());
+					numbers[i][n]->setNumber(0);
+				}
+				else if (numbers[i][n + 1]->getNumber() == numbers[i][n]->getNumber()) {
+					numbers[i][n + 1]->setNumber(numbers[i][n + 1]->getNumber() + numbers[i][n]->getNumber());
+					numbers[i][n]->setNumber(0);
+					end = j;
+					break;
+				}
+			}
+		}
+	}
+}
+void HelloWorld::moveDown() {
+	//move every number to the most down, until get combined or the end
+	for (int i = 0; i < LINE_NUMBER_COUNT; i++) {
+		int end = 0;
+		for (int j = 0; j < LINE_NUMBER_COUNT; j++) {
+			for (int n = j; n > end; n--) {
+				if (numbers[i][n - 1]->getNumber() == 0) {
+					numbers[i][n - 1]->setNumber(numbers[i][n]->getNumber());
+					numbers[i][n]->setNumber(0);
+				}
+				else if (numbers[i][n - 1]->getNumber() == numbers[i][n]->getNumber()) {
+					numbers[i][n - 1]->setNumber(numbers[i][n - 1]->getNumber() + numbers[i][n]->getNumber());
+					numbers[i][n]->setNumber(0);
+					end = j;
+					break;
+				}
+			}
+		}
+	}
 }
