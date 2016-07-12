@@ -31,6 +31,7 @@ public:
 	void moveDown();
 
 	void createNumbers(Size screenSize);
+	void randomCreateNumber();
     
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);

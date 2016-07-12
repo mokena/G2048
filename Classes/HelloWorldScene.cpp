@@ -24,9 +24,11 @@ bool HelloWorld::init()
     {
         return false;
     }
-
+	srand(time(NULL));
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	createNumbers(visibleSize);
+	randomCreateNumber();
+	randomCreateNumber();
 
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->onTouchBegan = CC_CALLBACK_2(HelloWorld::onTouchBegan, this);
@@ -42,12 +44,24 @@ void HelloWorld::createNumbers(Size screenSize) {
 
 	for (int i = 0; i < LINE_NUMBER_COUNT; i++) {
 		for (int j = 0; j < LINE_NUMBER_COUNT; j++) {
-			auto number = Number::create(2, Size(len, len), Point(Vec2(20 + i*(len + 10), startY + j*(len + 10))), Color3B::MAGENTA);
+			auto number = Number::create(0, Size(len, len), Point(Vec2(20 + i*(len + 10), startY + j*(len + 10))), Color3B::MAGENTA);
 			number->setPosition(Vec2(10 + i*(len + 10), startY + j*(len + 10)));
 
 			numbers[i][j] = number;
 			addChild(number);
 		}
+	}
+}
+
+void HelloWorld::randomCreateNumber() {
+	int x = rand() % LINE_NUMBER_COUNT;
+	int y = rand() % LINE_NUMBER_COUNT;
+
+	if (numbers[x][y]->getNumber() > 0) {
+		randomCreateNumber();
+	}
+	else {
+		numbers[x][y]->setNumber((rand()%10 > 1? 2: 4	));
 	}
 }
 
@@ -89,6 +103,7 @@ void HelloWorld::doMove(int direction) {
 }
 
 void HelloWorld::moveLeft() {
+	boolean moved = false;
 	//move every number to the most left, until get combined or the end
 	for (int j = 0; j < LINE_NUMBER_COUNT; j++) {
 		int end = 0;
@@ -97,18 +112,23 @@ void HelloWorld::moveLeft() {
 				if (numbers[n - 1][j]->getNumber() == 0) {
 					numbers[n - 1][j]->setNumber(numbers[n][j]->getNumber());
 					numbers[n][j]->setNumber(0);
+					moved = true;
 				}
 				else if (numbers[n - 1][j]->getNumber() == numbers[n][j]->getNumber()) {
 					numbers[n - 1][j]->setNumber(numbers[n - 1][j]->getNumber() + numbers[n][j]->getNumber());
 					numbers[n][j]->setNumber(0);
 					end = i;
+					moved = true;
 					break;
 				}
 			}
 		}
 	}
+
+	if (moved) randomCreateNumber();
 }
 void HelloWorld::moveRight() {
+	boolean moved = false;
 	//move every number to the most right, until get combined or the end
 	for (int j = 0; j < LINE_NUMBER_COUNT; j++) {
 		int end = LINE_NUMBER_COUNT - 1;
@@ -117,18 +137,22 @@ void HelloWorld::moveRight() {
 				if (numbers[n + 1][j]->getNumber() == 0) {
 					numbers[n + 1][j]->setNumber(numbers[n][j]->getNumber());
 					numbers[n][j]->setNumber(0);
+					moved = true;
 				}
 				else if (numbers[n + 1][j]->getNumber() == numbers[n][j]->getNumber()) {
 					numbers[n + 1][j]->setNumber(numbers[n + 1][j]->getNumber() + numbers[n][j]->getNumber());
 					numbers[n][j]->setNumber(0);
 					end = i;
+					moved = true;
 					break;
 				}
 			}
 		}
 	}
+	if (moved) randomCreateNumber();
 }
 void HelloWorld::moveUp() {
+	boolean moved = false;
 	//move every number to the most up, until get combined or the end
 	for (int i = 0; i < LINE_NUMBER_COUNT; i++) {
 		int end = LINE_NUMBER_COUNT - 1;
@@ -137,18 +161,22 @@ void HelloWorld::moveUp() {
 				if (numbers[i][n + 1]->getNumber() == 0) {
 					numbers[i][n + 1]->setNumber(numbers[i][n]->getNumber());
 					numbers[i][n]->setNumber(0);
+					moved = true;
 				}
 				else if (numbers[i][n + 1]->getNumber() == numbers[i][n]->getNumber()) {
 					numbers[i][n + 1]->setNumber(numbers[i][n + 1]->getNumber() + numbers[i][n]->getNumber());
 					numbers[i][n]->setNumber(0);
 					end = j;
+					moved = true;
 					break;
 				}
 			}
 		}
 	}
+	if (moved) randomCreateNumber();
 }
 void HelloWorld::moveDown() {
+	boolean moved = false;
 	//move every number to the most down, until get combined or the end
 	for (int i = 0; i < LINE_NUMBER_COUNT; i++) {
 		int end = 0;
@@ -157,14 +185,17 @@ void HelloWorld::moveDown() {
 				if (numbers[i][n - 1]->getNumber() == 0) {
 					numbers[i][n - 1]->setNumber(numbers[i][n]->getNumber());
 					numbers[i][n]->setNumber(0);
+					moved = true;
 				}
 				else if (numbers[i][n - 1]->getNumber() == numbers[i][n]->getNumber()) {
 					numbers[i][n - 1]->setNumber(numbers[i][n - 1]->getNumber() + numbers[i][n]->getNumber());
 					numbers[i][n]->setNumber(0);
 					end = j;
+					moved = true;
 					break;
 				}
 			}
 		}
 	}
+	if (moved) randomCreateNumber();
 }
