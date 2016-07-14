@@ -63,6 +63,40 @@ void HelloWorld::randomCreateNumber() {
 	else {
 		numbers[x][y]->setNumber((rand()%10 > 1? 2: 4	));
 	}
+	boolean gameOver = isGameOver();
+	if (gameOver) log("game is over");
+}
+
+boolean HelloWorld::isGameOver() {
+	boolean end = true;
+
+	for (int i = 0; i < LINE_NUMBER_COUNT; i=i+1)
+	{
+		for (int j = 0; j < LINE_NUMBER_COUNT; j=j+1) {
+			if (numbers[i][j]->getNumber() == 0 ) {
+				end = false;
+			}
+			else if (i == LINE_NUMBER_COUNT-1 && j < LINE_NUMBER_COUNT - 1) {
+				if (numbers[i][j]->getNumber() == numbers[i][j + 1]->getNumber()) {
+					end = false;
+				}
+			}
+			else if (i < LINE_NUMBER_COUNT - 1 && j == LINE_NUMBER_COUNT - 1) {
+				if (numbers[i][j]->getNumber() == numbers[i + 1][j]->getNumber()) {
+					end = false;
+				}
+			}
+			else if (i < LINE_NUMBER_COUNT - 1 && j < LINE_NUMBER_COUNT - 1) {
+				if (numbers[i][j]->getNumber() == numbers[i + 1][j]->getNumber() ||
+					numbers[i][j]->getNumber() == numbers[i][j + 1]->getNumber()) {
+					end = false;
+				}
+			}
+			if (!end) break;
+		}
+		if (!end) break;
+	}
+	return end;
 }
 
 bool HelloWorld::onTouchBegan(Touch* t, Event* e) {

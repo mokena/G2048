@@ -32,6 +32,7 @@ public:
 
 	void createNumbers(Size screenSize);
 	void randomCreateNumber();
+	boolean isGameOver();
     
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
